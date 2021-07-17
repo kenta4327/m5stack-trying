@@ -1,17 +1,17 @@
 #include <M5Stack.h>
 
-bool skip_flg_1_press   = false;
-bool skip_flg_1         = false;
-bool skip_flg_2_press   = false;
-bool skip_flg_2         = false;
-bool skip_flg_3_press   = false;
-bool skip_flg_3         = false;
-bool skip_flg_4         = false;
-bool skip_flg_5_release = false;
-bool skip_flg_5         = false;
-int  pressedForCnt      = 0;
+bool skipFlg1Press   = false;
+bool skipFlg1        = false;
+bool skipFlg2Press   = false;
+bool skipFlg2        = false;
+bool skipFlg3Press   = false;
+bool skipFlg3        = false;
+bool skipFlg4        = false;
+bool skipFlg5Release = false;
+bool skipFlg5        = false;
+int  pressedForCnt   = 0;
 
-void correctProcessing(String next_question) {
+void correctProcessing(String nextQuestion) {
     M5.Lcd.println();
     M5.Lcd.println("correct!!!");
     M5.Lcd.println();
@@ -22,20 +22,20 @@ void correctProcessing(String next_question) {
     M5.Lcd.clear(BLACK);
     M5.Lcd.setCursor(0, 0);
 
-    M5.Lcd.println(next_question);
+    M5.Lcd.println(nextQuestion);
 }
 
 void fromTheBeginning() {
-    skip_flg_1_press   = false;
-    skip_flg_1         = false;
-    skip_flg_2_press   = false;
-    skip_flg_2         = false;
-    skip_flg_3_press   = false;
-    skip_flg_3         = false;
-    skip_flg_4         = false;
-    skip_flg_5_release = false;
-    skip_flg_5         = false;
-    pressedForCnt      = 0;
+    skipFlg1Press   = false;
+    skipFlg1        = false;
+    skipFlg2Press   = false;
+    skipFlg2        = false;
+    skipFlg3Press   = false;
+    skipFlg3        = false;
+    skipFlg4        = false;
+    skipFlg5Release = false;
+    skipFlg5        = false;
+    pressedForCnt   = 0;
 
     // 画面クリア
     M5.Lcd.clear(BLACK);
@@ -55,48 +55,48 @@ void loop() {
     // ボタン状況読み取り
     M5.update();
 
-    if (!skip_flg_1_press) {
+    if (!skipFlg1Press) {
         // readの瞬間に押されていた
         if (M5.BtnA.isPressed()) {
             M5.Lcd.println("BtnA.isPressed()");
-            skip_flg_1_press = true;
+            skipFlg1Press = true;
         }
     }
 
-    if (skip_flg_1_press && !skip_flg_1) {
+    if (skipFlg1Press && !skipFlg1) {
         // readの瞬間は離れていた
         if (M5.BtnA.isReleased()) {
             M5.Lcd.println("BtnA.isReleased()");
-            skip_flg_1 = true;
+            skipFlg1 = true;
             correctProcessing("Press button A for more than 5 seconds.");
         }
     }
 
-    if (skip_flg_1 && !skip_flg_2_press) {
+    if (skipFlg1 && !skipFlg2Press) {
         // 前回のread時に押された (変化があった)
         if (M5.BtnA.wasPressed()) {
             M5.Lcd.println("BtnA.wasPressed()");
-            skip_flg_2_press = true;
+            skipFlg2Press = true;
         }
     }
 
-    if (skip_flg_1 && skip_flg_2_press && !skip_flg_2) {
+    if (skipFlg1 && skipFlg2Press && !skipFlg2) {
         // 前回のread時に離れた (押され始めたときから 引数 ミリ秒より多かったとき)
         if (M5.BtnA.wasReleasefor(5000)) {
             M5.Lcd.println("BtnA.wasReleasefor(5000)");
-            skip_flg_2 = true;
+            skipFlg2 = true;
             correctProcessing("Press button A for more than 10 seconds.");
         }
     }
 
-    if (skip_flg_1 && skip_flg_2 && !skip_flg_3) {
+    if (skipFlg1 && skipFlg2 && !skipFlg3) {
 
-        if (!skip_flg_3_press) {
+        if (!skipFlg3Press) {
             // 引数 ミリ秒以上押されてる間
             if (M5.BtnA.pressedFor(5000)) {
                 M5.Lcd.println("BtnA.pressedFor(5000)");
                 M5.Lcd.println("A little more.");
-                skip_flg_3_press = true;
+                skipFlg3Press = true;
             }
         } 
 
@@ -105,37 +105,37 @@ void loop() {
             pressedForCnt++;
             if (pressedForCnt > 1) {
                 M5.Lcd.println("BtnA.pressedFor(5000, 5000)");
-                skip_flg_3 = true;
+                skipFlg3 = true;
                 correctProcessing("Release button A in less than 5 seconds.");
             }
         }
     }
 
-    if (skip_flg_1 && skip_flg_2 && skip_flg_3 && !skip_flg_4) { 
+    if (skipFlg1 && skipFlg2 && skipFlg3 && !skipFlg4) {
         // 前回のread時に離れた (上より短いタイムのとき)
         // wasReleasefor() が呼ばれない限りは -1 未満じゃないとだめなのここ通らなそう
         if (M5.BtnA.wasReleased()) {
             M5.Lcd.println("BtnA.wasReleased()");
-            skip_flg_4 = true;
+            skipFlg4 = true;
             correctProcessing("Please release the button and wait a moment.");
         }
     }
 
-    if (skip_flg_1 && skip_flg_2 && skip_flg_3 && skip_flg_4 && !skip_flg_5) {
+    if (skipFlg1 && skipFlg2 && skipFlg3 && skipFlg4 && !skipFlg5) {
 
-        if (!skip_flg_5_release) {
+        if (!skipFlg5Release) {
             // 引数 ミリ秒以上離れてる間
             if (M5.BtnA.releasedFor(9000)) {
                 M5.Lcd.println("BtnA.releasedFor(9000)");
-                skip_flg_5_release = true;
+                skipFlg5Release = true;
                 M5.Lcd.println();
                 M5.Lcd.println("Press button A.");
             }
         }
 
-        if (skip_flg_5_release) {
+        if (skipFlg5Release) {
             if (M5.BtnA.wasReleasefor(0)) {
-                skip_flg_5 = true;
+                skipFlg5 = true;
                 correctProcessing("the end. Press button B to reset.");
             }
         }
