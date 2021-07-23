@@ -1,6 +1,5 @@
 #include <M5Stack.h>
 
-
 void setup() {
     M5.begin();
     SPIFFS.begin();
@@ -9,6 +8,7 @@ void setup() {
     M5.Lcd.println();
 
     // ルート直下のファイルを確認 (無用なファイルがアップされてないか確認)
+    // ディレクトリとの区別はつけてないので、ディレクトリがあったらそれはそれで表示
     File root = SPIFFS.open("/");
 
     File file = root.openNextFile();
